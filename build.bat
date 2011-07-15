@@ -1,0 +1,1 @@
+java -jar build-resources\compiler.jar --js src\microframework.js --js_output_file packages\microframework.min.js
