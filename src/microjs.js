@@ -5,48 +5,18 @@
 */
 (function (window, undefined) {
     
-    var AJAX = function () {
-
-        // PUBLIC
-
-        // Gets the results from a GET request
-        var get = function (url, values, callback) {
-            return sendRequest("get", url, values, callback);
-        },
-
-        // Gets the results from a POST to the URL with
-        // given values.
-        post = function (url, values, callback) {
-            return sendRequest("post", url, values, callback);
-        },
-
-        // Gets JSON items
-        getJSON = function (url, values, successCallback, failCallback) {
-            post(url, values,
-                {
-                    success: function (response) {
-                        var json = JSON.parse(response);
-
-                        if (successCallback) {
-                            successCallback(json);
-                        }
-                    },
-                    fail: failCallback
-                });
-        },
-
-        // PRIVATE
+    var AJAX = function () {		
 
         //This method create an XHR Object
-        getxhr = function () {
+        function getxhr() {
             var xhr = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
             return xhr;
-        },
+        };
 
         //Main AJAX Method
         //Parameters sendRequest(method, url, ValuesToSend, callbackObject)
         //E.g. $().sendRequest('get','customers.php',{customerId:1234, name:'James', lastname:'Bond'}, {success:function(){alert('yes')}, loading:function(){alert('Waiting')}, error:function(){alert('no')}});
-        sendRequest = function (m, url, valObj, callObj) {
+        function sendRequest(m, url, valObj, callObj) {
 
             //Here we create the xhr Object
             var myxhr = getxhr();
@@ -114,14 +84,38 @@
                     }
                 }
             };
-        };
+        }
 
-        return {
-            get: get,
-            post: post,
-            getJSON: getJSON
-        };
+        // PUBLIC
+		var api = {
+			// Gets the results from a GET request
+			get: function (url, values, callback) {
+				return sendRequest("get", url, values, callback);
+			},
+		
+			// Gets the results from a POST to the URL with
+			// given values.
+			post: function (url, values, callback) {
+				return sendRequest("post", url, values, callback);
+			},
+			
+			// Gets JSON items
+			getJSON: function (url, values, successCallback, failCallback) {
+				post(url, values,
+					{
+						success: function (response) {
+							var json = JSON.parse(response);
 
+							if (successCallback) {
+								successCallback(json);
+							}
+						},
+						fail: failCallback
+					});
+			}
+		};
+
+		return api;
     };
 
     var microLib = (function () {
