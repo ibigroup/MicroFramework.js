@@ -1,10 +1,10 @@
-﻿/*!
-* Micro JS Library
-* v0.2
+﻿/**
+* @preserve Micro JS Library
+* v1.0.3
 * Copyright 2011, IBI Group
 */
 (function (window, undefined) {
-
+    
     var AJAX = function () {
 
         // PUBLIC
@@ -91,14 +91,14 @@
                 if (myxhr.readyState == 4) {
                     switch (myxhr.status) {
 
-                        //If estatus is 200 means it success, the execute success from the callObj.                                                                                                                                        
+                        //If estatus is 200 means it success, the execute success from the callObj.                                                                                                                                              
                         case 200:
                             if (callObj.success) {
                                 callObj.success(myxhr.responseText);
                             }
                             break;
 
-                        //If estatus is 403, 404 or 503 means that there is something wrong, execute error from the callObj.                                                                                                                                        
+                        //If estatus is 403, 404 or 503 means that there is something wrong, execute error from the callObj.                                                                                                                                              
                         case 403:
                         case 404:
                         case 503:
@@ -230,6 +230,20 @@
                 return this;
             },
 
+            each = function (callback) {
+                if (callback) {
+                    for (var i = 0; i < elems.length; i++) {
+                        if (elems[i]) {
+                            var tempElems = [];
+                            tempElems.push(elems[i]);
+                            callback(i, microLibEngine(tempElems));
+                        }
+                    }
+                }
+
+                return this;
+            },
+
             hide = function (callback) {
                 for (var i = 0; i < elems.length; i++) {
                     if (elems[i]) {
@@ -289,6 +303,25 @@
                     for (var i = 0; i < elems.length; i++) {
                         if (elems[i]) {
                             elems[i].value = value;
+                        }
+                    }
+
+                    if (callback) {
+                        callback();
+                    }
+
+                    return this;
+                }
+            },
+
+            attr = function (attribute, data, callback) {
+                if (typeof data == "undefined" && elems[0]) {
+                    return elems[0].getAttribute(attribute);
+                }
+                else {
+                    for (var i = 0; i < elems.length; i++) {
+                        if (elems[i]) {
+                            elems[i].setAttribute(attribute, data);
                         }
                     }
 
@@ -388,14 +421,19 @@
             },
 
             checked = function (callback) {
-                return on('change', function (event) {
-                    if (callback) {
-                        var target = event.target;
-                        if (target && target.type === 'checkbox') {
-                            return callback(target.checked, target.value);
+                if (typeof callback == "undefined" && elems[0]) {
+                    return elems[0].type === 'checkbox' && elems[0].checked;
+                }
+                else {
+                    return on('change', function (event) {
+                        if (callback) {
+                            var target = event.target;
+                            if (target && target.type === 'checkbox') {
+                                return callback(target.checked, target.value);
+                            }
                         }
-                    }
-                });
+                    });
+                }
             },
 
             submit = function (callback) {
@@ -417,7 +455,9 @@
                 // Manipulation
                 html: html,
                 value: value,
+                attr: attr,
                 url: url,
+                each: each,
 
                 // Events
                 click: click,
