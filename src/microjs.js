@@ -4,14 +4,14 @@
 * Copyright 2011, IBI Group
 */
 (function (window, undefined) {
-    
-    var AJAX = function () {		
+
+    var AJAX = function () {
 
         //This method create an XHR Object
         function getxhr() {
             var xhr = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
             return xhr;
-        };
+        }
 
         //Main AJAX Method
         //Parameters sendRequest(method, url, ValuesToSend, callbackObject)
@@ -61,14 +61,14 @@
                 if (myxhr.readyState == 4) {
                     switch (myxhr.status) {
 
-                        //If estatus is 200 means it success, the execute success from the callObj.                                                                                                                                              
+                        //If estatus is 200 means it success, the execute success from the callObj.                                                                                                                                               
                         case 200:
                             if (callObj.success) {
                                 callObj.success(myxhr.responseText);
                             }
                             break;
 
-                        //If estatus is 403, 404 or 503 means that there is something wrong, execute error from the callObj.                                                                                                                                              
+                        //If estatus is 403, 404 or 503 means that there is something wrong, execute error from the callObj.                                                                                                                                               
                         case 403:
                         case 404:
                         case 503:
@@ -87,35 +87,35 @@
         }
 
         // PUBLIC
-		var api = {
-			// Gets the results from a GET request
-			get: function (url, values, callback) {
-				return sendRequest("get", url, values, callback);
-			},
-		
-			// Gets the results from a POST to the URL with
-			// given values.
-			post: function (url, values, callback) {
-				return sendRequest("post", url, values, callback);
-			},
-			
-			// Gets JSON items
-			getJSON: function (url, values, successCallback, failCallback) {
-				post(url, values,
-					{
-						success: function (response) {
-							var json = JSON.parse(response);
+        var api = {
+            // Gets the results from a GET request
+            get: function (url, values, callback) {
+                return sendRequest("get", url, values, callback);
+            },
 
-							if (successCallback) {
-								successCallback(json);
-							}
-						},
-						fail: failCallback
-					});
-			}
-		};
+            // Gets the results from a POST to the URL with
+            // given values.
+            post: function (url, values, callback) {
+                return sendRequest("post", url, values, callback);
+            },
 
-		return api;
+            // Gets JSON items
+            getJSON: function (url, values, successCallback, failCallback) {
+                this.post(url, values,
+                    {
+                        success: function (response) {
+                            var json = JSON.parse(response);
+
+                            if (successCallback) {
+                                successCallback(json);
+                            }
+                        },
+                        fail: failCallback
+                    });
+            }
+        };
+
+        return api;
     };
 
     var microLib = (function () {
@@ -150,7 +150,7 @@
             // The elems array is going to contains all the elements in order to chain
             var elems = elements || [],
 
-            _AJAX = new AJAX(),
+            ajax = new AJAX(),
 
             // Verify when the DOM is ready.
             // Callback is the anonymous function to execute when the dom is ready
@@ -459,9 +459,9 @@
                 submit: submit,
 
                 // AJAX
-                get: _AJAX.get,
-                post: _AJAX.post,
-                getJSON: _AJAX.getJSON
+                get: ajax.get,
+                post: ajax.post,
+                getJSON: ajax.getJSON
             };
         };
 
