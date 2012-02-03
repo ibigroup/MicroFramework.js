@@ -98,15 +98,6 @@
                             }
                             break;
 
-                        //If estatus is 403, 404 or 503 means that there is something wrong, execute error from the callObj.                                                                                                                                              
-                        case 403:
-                        case 404:
-                        case 503:
-                            if (callObj.error) {
-                                callObj.error(myxhr.responseText);
-                            }
-                            break;
-
                         default:
                             if (callObj.error) {
                                 callObj.error(myxhr.responseText);
