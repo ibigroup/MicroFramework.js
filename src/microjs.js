@@ -1,5 +1,5 @@
 ﻿/**
-* @preserve Micro JS Library
+* @preserve MicroFramework.js
 * v1.0.3
 * Copyright 2011, IBI Group
 */
