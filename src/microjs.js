@@ -4,49 +4,19 @@
 * Copyright 2011, IBI Group
 */
 (function (window, undefined) {
-    
+
     var AJAX = function () {
 
-        // PUBLIC
-
-        // Gets the results from a GET request
-        var get = function (url, values, callback) {
-            return sendRequest("get", url, values, callback);
-        },
-
-        // Gets the results from a POST to the URL with
-        // given values.
-        post = function (url, values, callback) {
-            return sendRequest("post", url, values, callback);
-        },
-
-        // Gets JSON items
-        getJSON = function (url, values, successCallback, failCallback) {
-            post(url, values,
-                {
-                    success: function (response) {
-                        var json = JSON.parse(response);
-
-                        if (successCallback) {
-                            successCallback(json);
-                        }
-                    },
-                    fail: failCallback
-                });
-        },
-
-        // PRIVATE
-
         //This method create an XHR Object
-        getxhr = function () {
+        function getxhr() {
             var xhr = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
             return xhr;
-        },
+        }
 
         //Main AJAX Method
         //Parameters sendRequest(method, url, ValuesToSend, callbackObject)
         //E.g. $().sendRequest('get','customers.php',{customerId:1234, name:'James', lastname:'Bond'}, {success:function(){alert('yes')}, loading:function(){alert('Waiting')}, error:function(){alert('no')}});
-        sendRequest = function (m, url, valObj, callObj) {
+        function sendRequest(m, url, valObj, callObj) {
 
             //Here we create the xhr Object
             var myxhr = getxhr();
@@ -91,7 +61,7 @@
                 if (myxhr.readyState == 4) {
                     switch (myxhr.status) {
 
-                        //If estatus is 200 means it success, the execute success from the callObj.                                                                                                                                              
+                        //If estatus is 200 means it success, the execute success from the callObj.                                                                                                                                               
                         case 200:
                             if (callObj.success) {
                                 callObj.success(myxhr.responseText);
@@ -105,14 +75,38 @@
                     }
                 }
             };
+        }
+
+        // PUBLIC
+        var api = {
+            // Gets the results from a GET request
+            get: function (url, values, callback) {
+                return sendRequest("get", url, values, callback);
+            },
+
+            // Gets the results from a POST to the URL with
+            // given values.
+            post: function (url, values, callback) {
+                return sendRequest("post", url, values, callback);
+            },
+
+            // Gets JSON items
+            getJSON: function (url, values, successCallback, failCallback) {
+                this.post(url, values,
+                    {
+                        success: function (response) {
+                            var json = JSON.parse(response);
+
+                            if (successCallback) {
+                                successCallback(json);
+                            }
+                        },
+                        fail: failCallback
+                    });
+            }
         };
 
-        return {
-            get: get,
-            post: post,
-            getJSON: getJSON
-        };
-
+        return api;
     };
 
     var microLib = (function () {
@@ -147,7 +141,7 @@
             // The elems array is going to contains all the elements in order to chain
             var elems = elements || [],
 
-            _AJAX = new AJAX(),
+            ajax = new AJAX(),
 
             // Verify when the DOM is ready.
             // Callback is the anonymous function to execute when the dom is ready
@@ -456,9 +450,9 @@
                 submit: submit,
 
                 // AJAX
-                get: _AJAX.get,
-                post: _AJAX.post,
-                getJSON: _AJAX.getJSON
+                get: ajax.get,
+                post: ajax.post,
+                getJSON: ajax.getJSON
             };
         };
 
